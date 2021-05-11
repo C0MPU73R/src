@@ -1,0 +1,98 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyChainedComparisonsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoreConstantInTheMiddle" value="true" />
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N802" />
+          <option value="N803" />
+          <option value="N806" />
+          <option value="N814" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="otp.ai.TimeManager.base" />
+          <option value="otp.ai.TimeManager.localAvatar" />
+          <option value="otp.avatar.Avatar.base" />
+          <option value="otp.avatar.AvatarDetail.base" />
+          <option value="otp.avatar.AvatarHandle.base" />
+          <option value="otp.avatar.AvatarHandle.localAvatar" />
+          <option value="otp.avatar.AvatarPanel.base" />
+          <option value="otp.avatar.DistributedAvatar.base" />
+          <option value="otp.avatar.DistributedPlayer.base" />
+          <option value="otp.avatar.DistributedPlayer.localAvatar" />
+          <option value="otp.avatar.LocalAvatar.base" />
+          <option value="otp.avatar.LocalAvatar.render" />
+          <option value="otp.avatar.LocalAvatar.camera" />
+          <option value="otp.avatar.PositionExaminer.render" />
+          <option value="otp.avatar.ShadowCaster.base" />
+          <option value="otp.avatar.ShadowCaster.loader" />
+          <option value="otp.chat.ChatInputNormal.base" />
+          <option value="otp.chat.ChatInputTyped.base" />
+          <option value="otp.chat.ChatInputWhiteListFrame.base" />
+          <option value="otp.chat.ChatInputWhiteListFrame.localAvatar" />
+          <option value="otp.chat.ChatManager.base" />
+          <option value="otp.chat.TalkAssistant.base" />
+          <option value="otp.chat.TalkAssistant.localAvatar" />
+          <option value="otp.chat.TalkHandle.localAvatar" />
+          <option value="otp.chat.TalkHandle.base" />
+          <option value="otp.distributed.OTPClientRepository.base" />
+          <option value="otp.distributed.OTPClientRepository.render" />
+          <option value="otp.distributed.OTPClientRepository.loader" />
+          <option value="otp.distributed.OTPClientRepository.localAvatar" />
+          <option value="otp.friends.AvatarFriendInfo.base" />
+          <option value="otp.friends.AvatarFriendsManager.base" />
+          <option value="otp.friends.FriendInfo.base" />
+          <option value="otp.friends.FriendManager.base" />
+          <option value="otp.friends.FriendSecret.base" />
+          <option value="otp.friends.FriendSecret.loader" />
+          <option value="otp.friends.FriendSecret.localAvatar" />
+          <option value="otp.friends.GuildManager.base" />
+          <option value="otp.friends.GuildManager.localAvatar" />
+          <option value="otp.friends.PlayerFriendsManager.localAvatar" />
+          <option value="otp.friends.PlayerFriendsManager.base" />
+          <option value="otp.launcher.DummyLauncherBase.base" />
+          <option value="otp.launcher.LauncherBase.base" />
+          <option value="otp.level.AmbientSound.base" />
+          <option value="otp.level.CutScene.base" />
+          <option value="otp.level.CutScene.camera" />
+          <option value="otp.level.CutScene.render" />
+          <option value="otp.level.DistributedEntity.base" />
+          <option value="otp.level.DistributedLevel.base" />
+          <option value="otp.level.DistributedLevel.render" />
+          <option value="otp.level.LevelMgr.loader" />
+          <option value="otp.level.ModelEntity.loader" />
+          <option value="otp.login.AccountServerConstants.base" />
+          <option value="otp.login.GuiScreen.base" />
+          <option value="otp.login.LeaveToPayDialog.loader" />
+          <option value="otp.login.LeaveToPayDialog.base" />
+          <option value="otp.login.LoginScreen.base" />
+          <option value="otp.login.LoginTTSpecificDevAccount.base" />
+          <option value="otp.login.PrivacyPolicyPanel.loader" />
+          <option value="otp.login.TTAccount.base" />
+          <option value="otp.otpbase.OTPBase.base" />
+          <option value="otp.otpbase.OTPBase.loader" />
+          <option value="otp.otpbase.OTPGlobals.loader" />
+          <option value="otp.otpbase.OTPTimer.loader" />
+          <option value="otp.otpgui.OTPDialog.loader" />
+          <option value="otp.speedchat.SCCustomMenu.base" />
+          <option value="otp.speedchat.SCEmoteMenu.base" />
+          <option value="otp.speedchat.SCEmoteTerminal.base" />
+          <option value="otp.speedchat.SCMenu.loader" />
+          <option value="otp.speedchat.SCMenuHolder.loader" />
+          <option value="otp.speedchat.SCTerminal.loader" />
+          <option value="otp.speedchat.SpeedChatGMHandler.base" />
+          <option value="otp.uberdog.DistributedChatManager.base" />
+          <option value="otp.uberdog.SpeedchatRelay.base" />
+          <option value="range.remove" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

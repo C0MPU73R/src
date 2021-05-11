@@ -1,18 +1,13 @@
-assert not __debug__ # Run with -OO
+import subprocess
 
-#from panda3d.core import *
+assert not __debug__  # Run with -OO
 
-from collections import OrderedDict
 from termcolor import colored
 
 import niraimarshal
 
-import subprocess
-import glob
-import imp
 import sys
 import os
-
 SOURCE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Load our aes module
@@ -33,6 +28,7 @@ NIRAI_ROOT = os.path.abspath(os.path.join(SOURCE_ROOT, '..'))
 PYTHON_ROOT = os.path.join(NIRAI_ROOT, 'python')
 PANDA3D_ROOT = os.path.join(NIRAI_ROOT, 'panda3d')
 THIRDPARTY_ROOT = os.path.join(PANDA3D_ROOT, 'thirdparty')
+
 
 class NiraiCompilerBase:
     def __init__(self, output, outputdir='built',
@@ -63,7 +59,7 @@ class NiraiCompilerBase:
         if thirdparty:
             root = os.path.normpath(lib).split(os.sep)[0]
             self.includedirs.add(os.path.join(self.thirdpartydir, root, 'include'))
-            
+
             lib = os.path.join(self.thirdpartydir, lib)
 
         self.libs.add(lib)
@@ -71,7 +67,7 @@ class NiraiCompilerBase:
     def add_nirai_files(self):
         for filename in ('aes.cxx', 'main.cxx'):
             self.add_source(os.path.join(SOURCE_ROOT, filename))
-            
+
         self.add_library('pythonembed')
 
     def _run_command(self, cmd):
@@ -79,16 +75,17 @@ class NiraiCompilerBase:
         v = p.wait()
 
         if v != 0:
-            print colored('The following command returned non-zero value (%d): %s' % (v, cmd), 'red')
+            print(colored('The following command returned non-zero value (%d): %s' % (v, cmd), 'red'))
             sys.exit(1)
 
     def run(self):
-        print colored('Compiling CXX codes...', 'magenta')
+        print(colored('Compiling CXX codes...', 'magenta'))
         for filename in self.sources:
             self.compile(filename)
 
-        print colored('Linking...', 'cyan')
+        print(colored('Linking...', 'cyan'))
         self.link()
+
 
 class NiraiCompilerWindows(NiraiCompilerBase):
     def add_nirai_files(self):
@@ -131,7 +128,8 @@ class NiraiCompilerWindows(NiraiCompilerBase):
     def compile(self, filename):
         out = '%s/%s.obj' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
 
-        cmd = 'cl /c /GF /MP4 /DPy_BUILD_CORE /DLINK_ALL_STATIC /DNTDDI_VERSION=0x0501 /wd4996 /wd4275 /wd4267 /wd4101 /wd4273 /nologo /EHsc /MD /Zi /O2'
+        cmd = 'cl /c /GF /MP4 /DPy_BUILD_CORE /DLINK_ALL_STATIC /DNTDDI_VERSION=0x0501 /wd4996 /wd4275 /wd4267 ' \
+              '/wd4101 /wd4273 /nologo /EHsc /MD /Zi /O2 '
         for ic in self.includedirs:
             cmd += ' /I"%s"' % ic
 
@@ -155,6 +153,7 @@ class NiraiCompilerWindows(NiraiCompilerBase):
 
         cmd += ' /RELEASE /nodefaultlib:python27.lib /nodefaultlib:libcmt /ignore:4049 /ignore:4006 /ignore:4221'
         self._run_command(cmd)
+
 
 class NiraiCompilerDarwin(NiraiCompilerBase):
     def __init__(self, *args, **kwargs):
@@ -205,11 +204,13 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self.frameworks.add('Cocoa')
 
     def compile(self, filename):
-        print colored('Compiling...', 'cyan'), colored(filename, 'yellow')
+        print(colored('Compiling...', 'cyan'), colored(filename, 'yellow'))
         out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
 
-        #cmd = 'g++ -g -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
-        cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
+        # cmd = 'g++ -g -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2
+        # -Wno-deprecated-declarations -pthread'
+        cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations ' \
+              '-pthread '
         for ic in self.includedirs:
             cmd += ' -I"%s"' % ic
 
@@ -219,7 +220,7 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         self._built.add(out)
 
     def link(self):
-        #cmd = 'g++ -g -o %s/%s' % (self.outputdir, self.output)
+        # cmd = 'g++ -g -o %s/%s' % (self.outputdir, self.output)
         cmd = 'g++ -o %s/%s' % (self.outputdir, self.output)
 
         for path in self.libpath:
@@ -240,7 +241,7 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
                 lib = lib[:-2]
 
             cmd += ' -l%s' % lib
-            
+
         for obj in self._built:
             cmd += ' "%s"' % obj
 
@@ -248,14 +249,15 @@ class NiraiCompilerDarwin(NiraiCompilerBase):
         cmd += ':/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib'
         self._run_command(cmd)
 
+
 class NiraiCompilerLinux(NiraiCompilerBase):
     def __init__(self, *args, **kwargs):
         NiraiCompilerBase.__init__(self, *args, **kwargs)
         self.libs = list(self.libs)
-    
+
     def add_library(self, lib):
         self.libs.append(lib)
-        
+
     def add_panda3d_lib(self, lib):
         self.add_library(os.path.join(self.builtLibs, lib))
 
@@ -271,7 +273,7 @@ class NiraiCompilerLinux(NiraiCompilerBase):
         self.add_panda3d_lib('_panda3d_physics')
         self.add_panda3d_lib('_panda3d_ode')
         self.add_panda3d_lib('_panda3d_egg')
-        
+
         self.add_panda3d_lib('p3framework')
         self.add_panda3d_lib('p3tinydisplay')
         self.add_panda3d_lib('p3direct')
@@ -311,9 +313,9 @@ class NiraiCompilerLinux(NiraiCompilerBase):
         self.add_library('dl')
         self.add_library('pthread')
         self.add_library('util')
-        
+
     def compile(self, filename):
-        print filename
+        print(filename)
         out = '%s/%s.o' % (self.outputdir, os.path.basename(filename).rsplit('.', 1)[0])
 
         cmd = 'g++ -c -DPy_BUILD_CORE -DLINK_ALL_STATIC -ftemplate-depth-70 -fPIC -O2 -Wno-deprecated-declarations -pthread'
@@ -324,10 +326,10 @@ class NiraiCompilerLinux(NiraiCompilerBase):
 
         self._run_command(cmd)
         self._built.add(out)
-        
+
     def link(self):
         cmd = 'g++ -o %s/%s' % (self.outputdir, self.output)
-        
+
         for path in self.libpath:
             cmd += ' -L"%s"' % path
 
@@ -346,7 +348,8 @@ class NiraiCompilerLinux(NiraiCompilerBase):
 
         self._run_command(cmd)
 
-class NiraiPackager: 
+
+class NiraiPackager:
     HEADER = 'NRI\n'
 
     def __init__(self, outfile):
@@ -372,16 +375,17 @@ class NiraiPackager:
             data = self.compile_module(name, data)
 
         except:
-            print colored('WARNING: Failed to compile %s' % filename, 'red')
+            print(colored('WARNING: Failed to compile %s' % filename, 'red'))
             return '', ('', 0)
 
         size = len(data) * (-1 if pkg else 1)
         return name, (data, size)
 
+    @staticmethod
     def compile_module(self, name, data):
         return niraimarshal.dumps(compile(data, name, 'exec'))
 
-    def add_module(self, moduleName, data, size=None, compile=False, negSize=False):                
+    def add_module(self, moduleName, data, size=None, compile=False, negSize=False):
         if compile:
             data = self.compile_module(moduleName, data)
 
@@ -393,14 +397,14 @@ class NiraiPackager:
         self.modules[moduleName] = (data, size)
 
     def add_file(self, filename, mangler=None):
-        print colored('Adding file','cyan'), colored(filename, 'yellow')
+        print(colored('Adding file', 'cyan'), colored(filename, 'yellow'))
         moduleName, (data, size) = self.__read_file(filename, mangler)
         if moduleName:
             moduleName = os.path.basename(filename).rsplit('.', 1)[0]
             self.add_module(moduleName, data, size)
 
     def add_directory(self, dir, mangler=None):
-        print colored('Adding directory ', 'cyan'), colored(dir, 'yellow')
+        print(colored('Adding directory ', 'cyan'), colored(dir, 'yellow'))
 
         def _recurse_dir(dir):
             for f in os.listdir(dir):
@@ -421,13 +425,13 @@ class NiraiPackager:
         norm = os.path.normpath(abs)
         if relative:
             rel = os.path.relpath(norm)
-            
+
         else:
             rel = norm
         return len(rel) + len(os.sep)
 
     def add_panda3d_dirs(self):
-        manglebase = self.get_mangle_base(os.path.join(PANDA3D_ROOT, 'built'),  relative=False)
+        manglebase = self.get_mangle_base(os.path.join(PANDA3D_ROOT, 'built'), relative=False)
 
         def _mangler(name):
             name = name[manglebase:].strip('.')
@@ -438,7 +442,7 @@ class NiraiPackager:
         self.add_directory(os.path.join(PANDA3D_ROOT, 'built', 'panda3d'), mangler=_mangler)
 
     def add_default_lib(self):
-        manglebase = self.get_mangle_base(os.path.join(PYTHON_ROOT, 'Lib'),  relative=False)
+        manglebase = self.get_mangle_base(os.path.join(PYTHON_ROOT, 'Lib'), relative=False)
 
         def _mangler(name):
             name = name[manglebase:]
@@ -457,9 +461,7 @@ class NiraiPackager:
 
     def dump_key(self, key):
         for k in key:
-            print ord(k),
-
-        print
+            print(ord(k))
 
     def process_modules(self):
         # Pure virtual
@@ -468,13 +470,14 @@ class NiraiPackager:
     def get_file_contents(self, filename, encrypt=False):
         with open(filename, 'rb') as f:
             data = f.read()
-            
+
         if encrypt:
             iv = self.generate_key(16)
             key = self.generate_key(16)
             data = iv + key + aes.encrypt(data, key, iv)
 
         return data
+
 
 if sys.platform.startswith('win'):
     NiraiCompiler = NiraiCompilerWindows
